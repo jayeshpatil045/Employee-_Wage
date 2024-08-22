@@ -64,12 +64,13 @@ def part_time_employee_daily_wage():
 def main():
     print("Welcome to Employee Wage Program")
     attendance = check_attendance()
-    if attendance == 1:
-         print(f"Your daily wages is {calculate_daily_employee_wage()}.")
-    elif attendance == 2:
-        print(f"Employee Part time daily wage is {part_time_employee_daily_wage()}")     
-    else:
-        print("Employee is Absent ")
+    match (attendance):
+        case 1:
+            print(f"Your daily wages is {calculate_daily_employee_wage()}.")
+        case 2:
+            print(f"Employee Part time daily wage is {part_time_employee_daily_wage()}")     
+        case _:
+            print("Employee is Absent ")
 
 if __name__ == "__main__":
     main()
