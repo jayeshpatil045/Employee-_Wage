@@ -13,7 +13,7 @@ WAGE_PER_HOUR = 20
 FULL_DAY_HOUR = 8
 PART_TIME_DAY_HOUR = 4
 
-def Check_Attendance():
+def check_attendance():
     """
         Description:
             Randomly selects from a list to check if the employee is present or not.
@@ -30,7 +30,7 @@ def Check_Attendance():
     random.shuffle(attendance_list) 
     return attendance_list[0]
 
-def Calculate_Daily_Employee_Wage():
+def calculate_daily_employee_wage():
     """
 
         Description:
@@ -63,9 +63,9 @@ def part_time_employee_daily_wage():
 
 def main():
     print("Welcome to Employee Wage Program")
-    attendance = Check_Attendance()
+    attendance = check_attendance()
     if attendance == 1:
-         print(f"Your daily wages is {Calculate_Daily_Employee_Wage()}.")
+         print(f"Your daily wages is {calculate_daily_employee_wage()}.")
     elif attendance == 2:
         print(f"Employee Part time daily wage is {part_time_employee_daily_wage()}")     
     else:
