@@ -89,16 +89,7 @@ class Employeewage:
         return self.total_wage, self.total_hours, self.total_days, self.daily_wages
 
 def main():
-    """
-    Description:
-        Main function that runs the Employee Wage Program and prints the results.
 
-    Parameters:
-        None
-
-    Return:
-        None
-    """
     print("Welcome to Employee Wage Program")
     employee_wage = Employeewage()
     total_wage, total_hours, total_days, daily_wages = employee_wage.calculate_monthly_wage()
