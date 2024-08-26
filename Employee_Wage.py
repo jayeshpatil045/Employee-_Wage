@@ -1,44 +1,50 @@
 '''
 @Author: Jayesh Patil
-@Date: 2024-08-25
+@Date: 2024-08-26
 @Last Modified by: Jayesh Patil
 @Title: Employee Wage Program 
 '''
 import random
 
-class EmpWageBuilder:
-    def __init__(self, company_name, wage_per_hour, full_day_hour, part_time_day_hour, max_working_days, max_working_hours):
+class EmployeeWage:
+    def __init__(self, company_name, wage_per_hour, max_working_days, max_working_hours, full_day_hour, part_time_day_hour):
         """
         Description:
-            Initializes the EmpWageBuilder instance with company-specific wage parameters.
+            Initializes the EmployeeWage object with company details and tracking variables.
 
         Parameters:
-            company_name (str): The name of the company.
-            wage_per_hour (int): The wage per hour for the employee.
-            full_day_hour (int): The number of hours for a full day of work.
-            part_time_day_hour (int): The number of hours for a part-time day of work.
-            max_working_days (int): The maximum number of working days in the month.
-            max_working_hours (int): The maximum number of working hours in the month.
+            company_name (str): Name of the company.
+            wage_per_hour (int): Wage per hour for the company.
+            max_working_days (int): Maximum working days per month for the company.
+            max_working_hours (int): Maximum working hours per month for the company.
+            full_day_hour (int): Full day working hours.
+            part_time_day_hour (int): Part-time working hours.
+
+        Returns:
+            None
         """
         self.company_name = company_name
         self.wage_per_hour = wage_per_hour
-        self.full_day_hour = full_day_hour
-        self.part_time_day_hour = part_time_day_hour
         self.max_working_days = max_working_days
         self.max_working_hours = max_working_hours
+        self.full_day_hour = full_day_hour
+        self.part_time_day_hour = part_time_day_hour
         self.total_wage = 0
         self.total_hours = 0
         self.total_days = 0
         self.daily_wages = []
 
-    @staticmethod
-    def check_attendance():
+    @classmethod
+    def check_attendance(cls):
         """
         Description:
             Randomly selects from a list to check if the employee is present, part-time, or absent.
 
-        Return:
-            int: Returns 0, 1, or 2 to indicate absence, full-time, or part-time, respectively.
+        Parameters:
+            None
+
+        Returns:
+            int: 0 if absent, 1 if full-time, 2 if part-time.
         """
         attendance_list = [0, 1, 2]
         random.shuffle(attendance_list)
@@ -47,28 +53,31 @@ class EmpWageBuilder:
     def calculate_employee_wage(self, attendance):
         """
         Description:
-            Calculates the daily wage and hours worked based on attendance.
+            Calculate daily wage based on attendance using a match-case statement.
 
         Parameters:
-            attendance (int): 0 for absent, 1 for full-time, 2 for part-time.
+            attendance (int): Attendance status (0: absent, 1: full-time, 2: part-time).
 
-        Return:
-            tuple: Returns a tuple containing the daily wage (int) and hours worked (int).
+        Returns:
+            tuple: A tuple containing the calculated daily wage and hours worked.
         """
         match attendance:
             case 1:  # Full-time
                 return self.wage_per_hour * self.full_day_hour, self.full_day_hour
             case 2:  # Part-time
                 return self.wage_per_hour * self.part_time_day_hour, self.part_time_day_hour
-            case _:  # Absent
-                return 0, 0
+            case _:
+                return 0, 0  # Absent
 
     def calculate_monthly_wage(self):
         """
         Description:
-            Calculates the total wage, total hours, total days, and daily wages for the month.
+            Calculate the monthly wage based on the condition of total working hours or days.
 
-        Return:
+        Parameters:
+            None
+
+        Returns:
             None
         """
         while self.total_days < self.max_working_days and self.total_hours < self.max_working_hours:
@@ -79,28 +88,137 @@ class EmpWageBuilder:
             self.total_hours += hours_worked
             self.total_days += 1
 
+    def display_wages(self):
+        """
+        Description:
+            Display the daily wages and the total wage for the month.
 
-def main():
-    companies = {
-        "HCL": {"wage_per_hour": 20, "full_day_hour": 8, "part_time_day_hour": 4, "max_working_days": 20, "max_working_hours": 100},
-        "TCS": {"wage_per_hour": 25, "full_day_hour": 8, "part_time_day_hour": 4, "max_working_days": 22, "max_working_hours": 120},
-        "APEXON": {"wage_per_hour": 30, "full_day_hour": 8, "part_time_day_hour": 4, "max_working_days": 18, "max_working_hours": 90}
-    }
+        Parameters:
+            None
 
-    for company, params in companies.items():
-        emp_wage_builder = EmpWageBuilder(company, params["wage_per_hour"], params["full_day_hour"],
-                                           params["part_time_day_hour"], params["max_working_days"], params["max_working_hours"])
-        emp_wage_builder.calculate_monthly_wage()
-
-        # Print the results directly
-        print(f"\nCalculating wages for {emp_wage_builder.company_name}:")
-        print("Daily wages for each day of the month:")
-        for day, wage in enumerate(emp_wage_builder.daily_wages, start=1):
+        Returns:
+            None
+        """
+        print(f"{self.company_name} - Daily wages for each day of the month:")
+        for day, wage in enumerate(self.daily_wages, start=1):
             print(f"Day {day}: ${wage}")
 
-        print(f"\nTotal wage for the month: {emp_wage_builder.total_wage}")
-        print(f"Total working days: {emp_wage_builder.total_days}")
-        print(f"Total working hours: {emp_wage_builder.total_hours}")
+        print(f"\nTotal wage for the month for {self.company_name} is ${self.total_wage}.")
+        print(f"Total working days: {self.total_days}")
+        print(f"Total working hours: {self.total_hours}")
+
+
+class EmpWageBuilder:
+    def __init__(self):
+        """
+        Description:
+            Initializes the EmpWageBuilder object to manage multiple companies.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
+        self.companies = []
+
+    def add_company(self, company_name, wage_per_hour, max_working_days, max_working_hours, full_day_hour, part_time_day_hour):
+        """
+        Description:
+            Adds a company to the list and computes its total wage.
+
+        Parameters:
+            company_name (str): Name of the company.
+            wage_per_hour (int): Wage per hour for the company.
+            max_working_days (int): Maximum working days per month for the company.
+            max_working_hours (int): Maximum working hours per month for the company.
+            full_day_hour (int): Full day working hours.
+            part_time_day_hour (int): Part-time working hours.
+
+        Returns:
+            None
+        """
+        company = EmployeeWage(company_name, wage_per_hour, max_working_days, max_working_hours, full_day_hour, part_time_day_hour)
+        company.calculate_monthly_wage()
+        self.companies.append(company)
+
+    def display_all_wages(self):
+        """
+        Description:
+            Displays the wages for all companies.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
+        for company in self.companies:
+            company.display_wages()
+
+    def display_wage_sep(self, company_name):
+        """
+        Description:
+            Displays the wages for a specific company.
+
+        Parameters:
+            company_name (str): Name of the company to display wages for.
+
+        Returns:
+            None
+        """
+        for company in self.companies:
+            if company.company_name == company_name:
+                company.display_wages()
+                return
+        print(f"No data found for company: {company_name}")
+
+def main():
+    """
+    Description:
+        Main function to run the Employee Wage Program.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+    print("Welcome to Employee Wage Program for Multiple Companies")
+    builder = EmpWageBuilder()
+
+    while True:
+        print("\nEmployee Wage Program Menu")
+        print("1. Add Company and Calculate Wage")
+        print("2. Display All Company Wages")
+        print("3. Display Specific Company Wage")
+        print("4. Exit")
+        
+        choice = int(input("Enter your choice: "))
+        
+        if choice == 1:
+            company_name = input("Enter the company name: ")
+            wage_per_hour = int(input("Enter wage per hour: "))
+            max_working_days = int(input("Enter maximum working days per month: "))
+            max_working_hours = int(input("Enter maximum working hours per month: "))
+            full_day_hour = int(input("Enter full day working hours: "))
+            part_time_day_hour = int(input("Enter part-time working hours: "))
+            
+            builder.add_company(company_name, wage_per_hour, max_working_days, max_working_hours, full_day_hour, part_time_day_hour)
+        
+        elif choice == 2:
+            builder.display_all_wages()
+
+        elif choice == 3:
+            company_name = input("Enter the company name to display wage details: ")
+            builder.display_wage_sep(company_name)
+        
+        elif choice == 4:
+            print("Exiting the program.")
+            break
+        
+        else:
+            print("Invalid choice. Please enter 1, 2, 3, or 4.")
 
 if __name__ == "__main__":
     main()
